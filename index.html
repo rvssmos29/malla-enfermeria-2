@@ -51,6 +51,7 @@
       cursor: pointer;
       transition: transform 0.3s ease;
     }
+
     #logo-universidad:hover {
       transform: scale(1.1);
     }
@@ -62,12 +63,24 @@
       color: #cc2c9a;
     }
 
+    #contenedor-semestres {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 20px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .semestre {
       background: var(--primario);
       border-radius: 20px;
       box-shadow: 0 4px 10px var(--sombra);
       padding: 20px;
-      margin-bottom: 25px;
+      min-width: 300px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
       transition: background-color 0.3s ease;
     }
 
@@ -125,6 +138,7 @@
       display: block;
       margin: 0 auto 30px auto;
     }
+
     #reset-btn:hover {
       background: #b32487;
     }
@@ -151,6 +165,7 @@
       align-items: center;
       z-index: 1500;
     }
+
     #modal.active {
       display: flex;
     }
@@ -203,6 +218,7 @@
       background-color: #cc2c9a;
       color: white;
     }
+
     #guardar-btn:hover {
       background-color: #b32487;
     }
@@ -211,6 +227,7 @@
       background-color: #eee;
       color: #555;
     }
+
     #cancelar-btn:hover {
       background-color: #ccc;
     }
@@ -227,14 +244,28 @@
       .semestre {
         padding: 15px;
       }
+
+      #contenedor-semestres {
+        flex-direction: column;
+        overflow-x: visible;
+      }
+
+      .semestre {
+        min-width: unset;
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <img id="logo-universidad" src="udla.png" alt="Logo Universidad" title="Universidad de Las Américas" />
-  <h1>Malla de Burra Enfermera UDLA 👩🏻‍⚕️</h1>
+  <h1>Malla de Burra Enfermera UDLA 👩🏻‍⚕🌎</h1>
   <button id="reset-btn" title="Borrar todas las notas y progresos">🔄 Reiniciar Malla</button>
-  <div id="malla"></div>
+  
+  <div id="contenedor-semestres">
+    <div id="malla"></div>
+  </div>
+
   <p id="mensaje-personalizado">
     ¡Te quiero mucho burrita! <br />
     Siempre estaré apoyándote en cada paso de tu carrera. 💖
@@ -253,20 +284,18 @@
 
   <script>
     const malla = document.getElementById('malla');
-    const cursosPorSemestre =
-[
-  ["🧮 Introducción a la Matemática Aplicada", "🧬 Biología Celular", "🌍 Fundamentos del Actuar Comunitario", "🫀 Morfología y Función", "🚑 Primeros Auxilios", "🧪 Introducción a los Estudios de la Enfermería"],
-  ["🧠 Inglés I", "🧪 Fundamentos de Química y Bioquímica para el Área de la Salud", "⚖️ Fundamentos Éticos del Actuar Comunitario", "📈 Histoembriología", "📚 Enfermería en el Curso de Vida Humana"],
-  ["💎 Inglés II", "🧼 Salud Pública y Políticas Públicas", "📊 Bioestadística", "📝 Fisiología General", "🦠 Microbiología y Parasitología para Enfermería", "👩‍⚕️ Proceso de Atención en Enfermería"],
-  ["🧓 Metodologías Participativas e Interacción Comunitaria", "💊 Farmacología", "🛏️ Fisiopatología", "🏥 Fundamentos de Enfermería en Salud Comunitaria", "🧠 Psicología para el Ejercicio de la Enfermería", "👨‍👩‍👧‍👦 Proceso de Atención en Enfermería II"],
-  ["🧭 Taller de Intervención Comunitaria Interdisciplinar I", "📊 Salud y Morbilidad del Adulto I", "📖 Epidemiología", "💬 Educación para la Salud", "🏫 Gestión y Administración en Enfermería I", "🧍‍♀️ Práctica Integrada I"],
-  ["🔍 Epidemiología", "🧠 Salud Mental", "🏥 Enfermería Clínica II", "📚 Seminario II", "📝 Práctica Intermedia I", "🧪 Técnicas Avanzadas"],
-  ["📘 Enfermería en Salud Mental", "🧒 Salud del Niño y Adolescente I", "🚨 Enfermería en Urgencias", "📚 Metodología de la Investigación", "📝 Práctica Integrada III"],
-  ["🎓 Cuidados Paliativos Integrales", "🏭 Salud Ocupacional y Ambiental", "🧒 Salud del Niño y Adolescente II", "🧠 Infecciones y Atención en Salud", "🏅 Seminario de Grado", "🏅 Práctica Integrada IV"],
-  ["🚑 Soporte Vital Básico para Personal de Salud", "📖 Internado I"],
-  ["🎓 Preparación y Examen de Título", "🌟 Internado II"]
-];
-
+    const cursosPorSemestre = [
+      ["🧮 Introducción a la Matemática Aplicada", "🧬 Biología Celular", "🌍 Fundamentos del Actuar Comunitario", "🫀 Morfología y Función", "🚑 Primeros Auxilios", "🧪 Introducción a los Estudios de la Enfermería"],
+      ["🧠 Inglés I", "🧪 Fundamentos de Química y Bioquímica para el Área de la Salud", "⚖️ Fundamentos Éticos del Actuar Comunitario", "📈 Histoembriología", "📚 Enfermería en el Curso de Vida Humana"],
+      ["💎 Inglés II", "🧼 Salud Pública y Políticas Públicas", "📊 Bioestadística", "📝 Fisiología General", "🦠 Microbiología y Parasitología para Enfermería", "👩‍⚕️ Proceso de Atención en Enfermería"],
+      ["🧓 Metodologías Participativas e Interacción Comunitaria", "💊 Farmacología", "🛏️ Fisiopatología", "🏥 Fundamentos de Enfermería en Salud Comunitaria", "🧠 Psicología para el Ejercicio de la Enfermería", "👨‍👩‍👧‍👦 Proceso de Atención en Enfermería II"],
+      ["🧭 Taller de Intervención Comunitaria Interdisciplinar I", "📊 Salud y Morbilidad del Adulto I", "📖 Epidemiología", "💬 Educación para la Salud", "🏫 Gestión y Administración en Enfermería I", "🧍‍♀️ Práctica Integrada I"],
+      ["🔍 Epidemiología", "🧠 Salud Mental", "🏥 Enfermería Clínica II", "📚 Seminario II", "📝 Práctica Intermedia I", "🧪 Técnicas Avanzadas"],
+      ["📘 Enfermería en Salud Mental", "🧒 Salud del Niño y Adolescente I", "🚨 Enfermería en Urgencias", "📚 Metodología de la Investigación", "📝 Práctica Integrada III"],
+      ["🎓 Cuidados Paliativos Integrales", "🏭 Salud Ocupacional y Ambiental", "🧒 Salud del Niño y Adolescente II", "🧠 Infecciones y Atención en Salud", "🏅 Seminario de Grado", "🏅 Práctica Integrada IV"],
+      ["🚑 Soporte Vital Básico para Personal de Salud", "📖 Internado I"],
+      ["🎓 Preparación y Examen de Título", "🌟 Internado II"]
+    ];
 
     cursosPorSemestre.forEach((ramos, i) => {
       const cont = document.createElement('div');
@@ -293,7 +322,6 @@
 
     const cursos = document.querySelectorAll('.curso');
     const resetBtn = document.getElementById('reset-btn');
-
     const modal = document.getElementById('modal');
     const notaInput = document.getElementById('nota-input');
     const guardarBtn = document.getElementById('guardar-btn');
@@ -339,9 +367,7 @@
     }
 
     cursos.forEach(curso => {
-      curso.addEventListener('click', () => {
-        abrirModal(curso);
-      });
+      curso.addEventListener('click', () => abrirModal(curso));
     });
 
     guardarBtn.addEventListener('click', () => {
