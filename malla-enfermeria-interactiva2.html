@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Malla de Burra Enfermera UDLA</title>
+  <style>
+    :root {
+      --fondo: #f5c6ec;
+      --rosa: #f5c6ec;
+      --primario: #ffffff;
+      --texto: #1e1e1e;
+      --completado: #cce5cc;
+      --sombra: rgba(0, 0, 0, 0.1);
+      --nota-claro: #4a4a4a;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fondo: #000000;
+        --rosa: #cc2c9a;
+        --primario: #1a1a1a;
+        --texto: #f5c6ec;
+        --completado: #334d33;
+        --sombra: rgba(255, 255, 255, 0.1);
+        --nota-claro: #f5c6ec;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      padding: 20px;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    #logo-universidad {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 80px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px var(--sombra);
+      background: var(--primario);
+      padding: 5px;
+      z-index: 1000;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #logo-universidad:hover {
+      transform: scale(1.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2em;
+      color: #cc2c9a;
+    }
+
+    .semestre {
+      background: var(--primario);
+      border-radius: 20px;
+      box-shadow: 0 4px 10px var(--sombra);
+      padding: 20px;
+      margin-bottom: 25px;
+      transition: background-color 0.3s ease;
+    }
+
+    .semestre h2 {
+      margin-top: 0;
+      font-size: 1.4em;
+      color: #cc2c9a;
+      margin-bottom: 10px;
+    }
+
+    .curso {
+      padding: 10px 15px;
+      margin: 8px 0;
+      background: var(--rosa);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.4s ease, color 0.4s ease, transform 0.2s ease;
+      user-select: none;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .curso:hover {
+      background: #f0a7da;
+    }
+
+    .curso.completado .nombre {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .nota {
+      font-weight: 700;
+      font-size: 0.9em;
+      color: var(--nota-claro);
+      margin-left: 10px;
+      user-select: text;
+      min-width: 35px;
+      text-align: right;
+    }
+
+    #reset-btn {
+      padding: 10px 20px;
+      border: none;
+      background: #cc2c9a;
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(204, 44, 154, 0.5);
+      transition: background-color 0.3s ease;
+      user-select: none;
+      display: block;
+      margin: 0 auto 30px auto;
+    }
+    #reset-btn:hover {
+      background: #b32487;
+    }
+
+    #mensaje-personalizado {
+      text-align: center;
+      margin-top: 40px;
+      font-style: italic;
+      color: #cc2c9a;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.4em;
+      user-select: none;
+    }
+
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1500;
+    }
+    #modal.active {
+      display: flex;
+    }
+
+    #modal-content {
+      background: var(--primario);
+      border-radius: 16px;
+      padding: 20px 25px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    #modal h3 {
+      margin-top: 0;
+      color: #cc2c9a;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    #nota-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1.1em;
+      border-radius: 10px;
+      border: 2px solid #cc2c9a;
+      outline: none;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #modal-buttons {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    #modal-buttons button {
+      padding: 10px 20px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      min-width: 100px;
+    }
+
+    #guardar-btn {
+      background-color: #cc2c9a;
+      color: white;
+    }
+    #guardar-btn:hover {
+      background-color: #b32487;
+    }
+
+    #cancelar-btn {
+      background-color: #eee;
+      color: #555;
+    }
+    #cancelar-btn:hover {
+      background-color: #ccc;
+    }
+
+    @media (max-width: 600px) {
+      #logo-universidad {
+        width: 60px;
+        top: 10px;
+        right: 10px;
+      }
+      h1 {
+        font-size: 1.6em;
+      }
+      .semestre {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <img id="logo-universidad" src="udla.png" alt="Logo Universidad" title="Universidad de Las Américas" />
+  <h1>Malla de Burra Enfermera UDLA 👩🏻‍⚕️</h1>
+  <button id="reset-btn" title="Borrar todas las notas y progresos">🔄 Reiniciar Malla</button>
+  <div id="malla"></div>
+  <p id="mensaje-personalizado">
+    ¡Te quiero mucho burrita! <br />
+    Siempre estaré apoyándote en cada paso de tu carrera. 💖
+  </p>
+
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-content">
+      <h3 id="modal-title">Ingresa la nota del ramo aprobado burrita</h3>
+      <input id="nota-input" type="text" maxlength="5" placeholder="Ejemplo: 6.7" aria-label="Ingrese la nota del ramo aprobado" />
+      <div id="modal-buttons">
+        <button id="guardar-btn">Guardar</button>
+        <button id="cancelar-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const malla = document.getElementById('malla');
+    const cursosPorSemestre =
+[
+  ["🧮 Introducción a la Matemática Aplicada", "🧬 Biología Celular", "🌍 Fundamentos del Actuar Comunitario", "🫀 Morfología y Función", "🚑 Primeros Auxilios", "🧪 Introducción a los Estudios de la Enfermería"],
+  ["🧠 Inglés I", "🧪 Fundamentos de Química y Bioquímica para el Área de la Salud", "⚖️ Fundamentos Éticos del Actuar Comunitario", "📈 Histoembriología", "📚 Enfermería en el Curso de Vida Humana"],
+  ["💎 Inglés II", "🧼 Salud Pública y Políticas Públicas", "📊 Bioestadística", "📝 Fisiología General", "🦠 Microbiología y Parasitología para Enfermería", "👩‍⚕️ Proceso de Atención en Enfermería"],
+  ["🧓 Metodologías Participativas e Interacción Comunitaria", "💊 Farmacología", "🛏️ Fisiopatología", "🏥 Fundamentos de Enfermería en Salud Comunitaria", "🧠 Psicología para el Ejercicio de la Enfermería", "👨‍👩‍👧‍👦 Proceso de Atención en Enfermería II"],
+  ["🧭 Taller de Intervención Comunitaria Interdisciplinar I", "📊 Salud y Morbilidad del Adulto I", "📖 Epidemiología", "💬 Educación para la Salud", "🏫 Gestión y Administración en Enfermería I", "🧍‍♀️ Práctica Integrada I"],
+  ["🔍 Epidemiología", "🧠 Salud Mental", "🏥 Enfermería Clínica II", "📚 Seminario II", "📝 Práctica Intermedia I", "🧪 Técnicas Avanzadas"],
+  ["📘 Enfermería en Salud Mental", "🧒 Salud del Niño y Adolescente I", "🚨 Enfermería en Urgencias", "📚 Metodología de la Investigación", "📝 Práctica Integrada III"],
+  ["🎓 Cuidados Paliativos Integrales", "🏭 Salud Ocupacional y Ambiental", "🧒 Salud del Niño y Adolescente II", "🧠 Infecciones y Atención en Salud", "🏅 Seminario de Grado", "🏅 Práctica Integrada IV"],
+  ["🚑 Soporte Vital Básico para Personal de Salud", "📖 Internado I"],
+  ["🎓 Preparación y Examen de Título", "🌟 Internado II"]
+];
+
+
+    cursosPorSemestre.forEach((ramos, i) => {
+      const cont = document.createElement('div');
+      cont.className = 'semestre';
+      cont.innerHTML = `<h2>${i + 1}º Semestre</h2>`;
+      ramos.forEach(ramo => {
+        const curso = document.createElement('div');
+        curso.className = 'curso';
+        curso.dataset.id = ramo;
+
+        const spanNombre = document.createElement('span');
+        spanNombre.className = 'nombre';
+        spanNombre.textContent = ramo;
+
+        const spanNota = document.createElement('span');
+        spanNota.className = 'nota';
+
+        curso.appendChild(spanNombre);
+        curso.appendChild(spanNota);
+        cont.appendChild(curso);
+      });
+      malla.appendChild(cont);
+    });
+
+    const cursos = document.querySelectorAll('.curso');
+    const resetBtn = document.getElementById('reset-btn');
+
+    const modal = document.getElementById('modal');
+    const notaInput = document.getElementById('nota-input');
+    const guardarBtn = document.getElementById('guardar-btn');
+    const cancelarBtn = document.getElementById('cancelar-btn');
+    let cursoActivo = null;
+
+    function cargarEstado() {
+      cursos.forEach(curso => {
+        const id = curso.dataset.id;
+        const nota = localStorage.getItem(id + '-nota');
+        if (nota) {
+          curso.classList.add('completado');
+          curso.querySelector('.nota').textContent = nota;
+        }
+      });
+    }
+
+    function guardarEstado(curso, nota) {
+      const id = curso.dataset.id;
+      if (nota && nota.trim() !== '') {
+        localStorage.setItem(id + '-nota', nota.trim());
+        curso.classList.add('completado');
+        curso.querySelector('.nota').textContent = nota.trim();
+      } else {
+        localStorage.removeItem(id + '-nota');
+        curso.classList.remove('completado');
+        curso.querySelector('.nota').textContent = '';
+      }
+    }
+
+    function abrirModal(curso) {
+      cursoActivo = curso;
+      const notaActual = curso.querySelector('.nota').textContent;
+      notaInput.value = notaActual;
+      modal.classList.add('active');
+      notaInput.focus();
+    }
+
+    function cerrarModal() {
+      modal.classList.remove('active');
+      cursoActivo = null;
+      notaInput.value = '';
+    }
+
+    cursos.forEach(curso => {
+      curso.addEventListener('click', () => {
+        abrirModal(curso);
+      });
+    });
+
+    guardarBtn.addEventListener('click', () => {
+      if (cursoActivo) {
+        guardarEstado(cursoActivo, notaInput.value);
+        cerrarModal();
+      }
+    });
+
+    cancelarBtn.addEventListener('click', cerrarModal);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === "Escape" && modal.classList.contains('active')) {
+        cerrarModal();
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      if (confirm('¿Seguro quieres reiniciar la malla? Se borrarán todas las notas y progresos.')) {
+        cursos.forEach(curso => {
+          localStorage.removeItem(curso.dataset.id + '-nota');
+          curso.classList.remove('completado');
+          curso.querySelector('.nota').textContent = '';
+        });
+      }
+    });
+
+    window.addEventListener('load', cargarEstado);
+  </script>
+</body>
+</html>
