@@ -35,6 +35,8 @@
       padding: 20px;
       min-height: 100vh;
       transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+      overflow-y: hidden;
     }
 
     #logo-universidad {
@@ -51,7 +53,6 @@
       cursor: pointer;
       transition: transform 0.3s ease;
     }
-
     #logo-universidad:hover {
       transform: scale(1.1);
     }
@@ -63,14 +64,16 @@
       color: #cc2c9a;
     }
 
-    #contenedor-semestres {
+    /* Contenedor de todos los semestres: fila horizontal con scroll */
+    #malla {
       display: flex;
-      flex-wrap: nowrap;
-      gap: 20px;
+      gap: 25px;
       overflow-x: auto;
+      overflow-y: hidden;
       padding-bottom: 20px;
-      scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 20px;
     }
 
     .semestre {
@@ -78,10 +81,13 @@
       border-radius: 20px;
       box-shadow: 0 4px 10px var(--sombra);
       padding: 20px;
-      min-width: 300px;
-      flex-shrink: 0;
+      min-width: 320px;
       scroll-snap-align: start;
-      transition: background-color 0.3s ease;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .semestre h2 {
@@ -89,11 +95,12 @@
       font-size: 1.4em;
       color: #cc2c9a;
       margin-bottom: 10px;
+      text-align: center;
     }
 
     .curso {
-      padding: 10px 15px;
-      margin: 8px 0;
+      padding: 8px 12px;
+      margin: 6px 0;
       background: var(--rosa);
       border-radius: 12px;
       cursor: pointer;
@@ -103,6 +110,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 0.95rem;
+      gap: 8px;
     }
 
     .curso:hover {
@@ -114,14 +123,20 @@
       opacity: 0.7;
     }
 
+    .nombre {
+      flex-grow: 1;
+      white-space: normal;
+      word-break: break-word;
+    }
+
     .nota {
       font-weight: 700;
       font-size: 0.9em;
       color: var(--nota-claro);
-      margin-left: 10px;
       user-select: text;
-      min-width: 35px;
+      min-width: 30px;
       text-align: right;
+      padding-left: 8px;
     }
 
     #reset-btn {
@@ -138,7 +153,6 @@
       display: block;
       margin: 0 auto 30px auto;
     }
-
     #reset-btn:hover {
       background: #b32487;
     }
@@ -165,7 +179,6 @@
       align-items: center;
       z-index: 1500;
     }
-
     #modal.active {
       display: flex;
     }
@@ -218,7 +231,6 @@
       background-color: #cc2c9a;
       color: white;
     }
-
     #guardar-btn:hover {
       background-color: #b32487;
     }
@@ -227,11 +239,11 @@
       background-color: #eee;
       color: #555;
     }
-
     #cancelar-btn:hover {
       background-color: #ccc;
     }
 
+    /* Ajustes para pantallas pequeñas */
     @media (max-width: 600px) {
       #logo-universidad {
         width: 60px;
@@ -242,30 +254,22 @@
         font-size: 1.6em;
       }
       .semestre {
+        min-width: 280px;
         padding: 15px;
       }
-
-      #contenedor-semestres {
-        flex-direction: column;
-        overflow-x: visible;
-      }
-
-      .semestre {
-        min-width: unset;
-        width: 100%;
+      .curso {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+        margin: 5px 0;
       }
     }
   </style>
 </head>
 <body>
   <img id="logo-universidad" src="udla.png" alt="Logo Universidad" title="Universidad de Las Américas" />
-  <h1>Malla de Burra Enfermera UDLA 👩🏻‍⚕🌎</h1>
+  <h1>Malla de Burra Enfermera UDLA 👩🏻‍⚕️</h1>
   <button id="reset-btn" title="Borrar todas las notas y progresos">🔄 Reiniciar Malla</button>
-  
-  <div id="contenedor-semestres">
-    <div id="malla"></div>
-  </div>
-
+  <div id="malla"></div>
   <p id="mensaje-personalizado">
     ¡Te quiero mucho burrita! <br />
     Siempre estaré apoyándote en cada paso de tu carrera. 💖
@@ -284,7 +288,8 @@
 
   <script>
     const malla = document.getElementById('malla');
-    const cursosPorSemestre = [
+    const cursosPorSemestre =
+    [
       ["🧮 Introducción a la Matemática Aplicada", "🧬 Biología Celular", "🌍 Fundamentos del Actuar Comunitario", "🫀 Morfología y Función", "🚑 Primeros Auxilios", "🧪 Introducción a los Estudios de la Enfermería"],
       ["🧠 Inglés I", "🧪 Fundamentos de Química y Bioquímica para el Área de la Salud", "⚖️ Fundamentos Éticos del Actuar Comunitario", "📈 Histoembriología", "📚 Enfermería en el Curso de Vida Humana"],
       ["💎 Inglés II", "🧼 Salud Pública y Políticas Públicas", "📊 Bioestadística", "📝 Fisiología General", "🦠 Microbiología y Parasitología para Enfermería", "👩‍⚕️ Proceso de Atención en Enfermería"],
@@ -322,6 +327,7 @@
 
     const cursos = document.querySelectorAll('.curso');
     const resetBtn = document.getElementById('reset-btn');
+
     const modal = document.getElementById('modal');
     const notaInput = document.getElementById('nota-input');
     const guardarBtn = document.getElementById('guardar-btn');
@@ -367,7 +373,9 @@
     }
 
     cursos.forEach(curso => {
-      curso.addEventListener('click', () => abrirModal(curso));
+      curso.addEventListener('click', () => {
+        abrirModal(curso);
+      });
     });
 
     guardarBtn.addEventListener('click', () => {
@@ -399,3 +407,6 @@
   </script>
 </body>
 </html>
+
+
+
